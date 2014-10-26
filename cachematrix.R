@@ -14,10 +14,17 @@ makeCacheMatrix <- function(origMtrx = matrix()) {
     origMtrx <<- y
     invMtrx <<- NULL
   }
+  # Functions for getting and setting cached inv. matrix value
   get <- function() origMtrx
+  # Inversing the matrix using build in solve() function in R
   setmatrix <- function(solve) invMtrx<<-solve
   getmatrix <- function() invMtrx
-  list(set = set, get = get, setmatrix = setmatrix, getmatrix = getmatrix)
+  list(
+      set = set, 
+      get = get, 
+      setmatrix = setmatrix, 
+      getmatrix = getmatrix
+      )
 }
 
 
@@ -29,10 +36,12 @@ makeCacheMatrix <- function(origMtrx = matrix()) {
 cacheSolve <- function(origMtrx, ...) {
   ## Return a matrix that is the inverse of 'origMtrx'
   invMtrx <- origMtrx$getmatrix()
+  # Check if we have cached matrix available?
   if(!is.null(invMtrx)){
     message("getting cached data")
     return(invMtrx)
   }
+  ## If cached matrix not available then return that is the inverse of 'origMtrx'
   data <- origMtrx$get()
   invMtrx <- solve(data, ...)
   origMtrx$setmatrix(invMtrx)
