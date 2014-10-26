@@ -3,16 +3,21 @@
 
 ## This function creates a special "matrix" object that can cache its inverse.
 
-makeCacheMatrix <- function(x = matrix()) {
-    m <- NULL
-    set <- function(y){
-        x <<- y
-        m <<- NULL
-    }
-    get <- function() x
-    setmatrix <- function(solve) m<<-solve
-    getmatrix <- function() m
-    list(set = set, get = get, setmatrix = setmatrix, getmatrix = getmatrix)
+makeCacheMatrix <- function(origMtrx = matrix()) {
+  
+  ## Check if a valid matrix provided as input
+  if(!is.matrix(origMtrx)){
+    stop("Please give a matrix")
+  }
+  invMtrx <- NULL
+  set <- function(y){
+    origMtrx <<- y
+    invMtrx <<- NULL
+  }
+  get <- function() origMtrx
+  setmatrix <- function(solve) invMtrx<<-solve
+  getmatrix <- function() invMtrx
+  list(set = set, get = get, setmatrix = setmatrix, getmatrix = getmatrix)
 }
 
 
@@ -21,15 +26,15 @@ makeCacheMatrix <- function(x = matrix()) {
 ## matrix has not changed), then the cache solve should retrieve the inverse from
 ## the cache.
 
-cacheSolve <- function(x, ...) {
-    ## Return a matrix that is the inverse of 'x'
-    m <- x$getmatrix()
-    if(!is.nul(m)){
-        message("getting cached data")
-        return(m)
-    }
-    data <- x$get()
-    m <- solve(data, ...)
-    x$setmatrix(m)
-    m
+cacheSolve <- function(origMtrx, ...) {
+  ## Return a matrix that is the inverse of 'origMtrx'
+  invMtrx <- origMtrx$getmatrix()
+  if(!is.null(invMtrx)){
+    message("getting cached data")
+    return(invMtrx)
+  }
+  data <- origMtrx$get()
+  invMtrx <- solve(data, ...)
+  origMtrx$setmatrix(invMtrx)
+  invMtrx
 }
